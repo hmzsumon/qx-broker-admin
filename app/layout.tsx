@@ -24,7 +24,6 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Qx Broker — Admin",
     description: "Qx Broker admin panel",
-    url: "https://www.qxprofit.com/",
     siteName: "Qx Broker",
     type: "website",
     locale: "en_US",
