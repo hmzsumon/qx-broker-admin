@@ -22,7 +22,7 @@ const CONFIG_FIELDS: { key: string; label: string }[] = [
   { key: "minAmount", label: "Min Investment (USDT)" },
   { key: "minWithdraw", label: "Min Withdrawal (USDT)" },
   { key: "lockDays", label: "Lock Days" },
-  { key: "dailyProfitPercent", label: "Default Daily Profit % (1-4)" },
+  { key: "dailyProfitPercent", label: "Default Daily Profit % (0.01-4)" },
   { key: "cancelChargePercent", label: "Cancel Charge %" },
 ];
 
@@ -85,7 +85,7 @@ export default function AdminTradeInvestmentScreen() {
 
   const manualRun = async (dryRun: boolean) => {
     const p = Number(percent);
-    if (!Number.isFinite(p) || p < 1 || p > 4) return toast.error("Percent must be between 1 and 4");
+    if (!Number.isFinite(p) || p < 0.01 || p > 4) return toast.error("Percent must be between 0.01 and 4");
     try {
       const res = await toast.promise(
         runProfit({ dryRun, percent: p, ignoreWeekend: true }).unwrap(),
@@ -115,6 +115,10 @@ export default function AdminTradeInvestmentScreen() {
           <label className="text-xs text-white/60">
             Today %
             <input
+              type="number"
+              min="0.01"
+              max="4"
+              step="0.01"
               value={percent}
               onChange={(e) => setPercent(e.target.value.replace(/[^0-9.]/g, ""))}
               className="ml-2 w-16 rounded-lg border border-white/10 bg-black/30 px-2 py-1 text-white outline-none"
@@ -153,6 +157,10 @@ export default function AdminTradeInvestmentScreen() {
             <label key={key} className="text-xs text-white/60">
               {label}
               <input
+                type="number"
+                min={key === "dailyProfitPercent" ? 0.01 : 0}
+                max={key === "dailyProfitPercent" ? 4 : undefined}
+                step={key === "dailyProfitPercent" ? "0.01" : "any"}
                 value={form?.[key] ?? ""}
                 onChange={(e) => set(key, e.target.value)}
                 className="mt-1 w-full rounded-xl border border-white/10 bg-black/30 px-3 py-2 text-white outline-none"
